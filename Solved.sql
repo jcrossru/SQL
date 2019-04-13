@@ -1,9 +1,6 @@
 -- use sakila database
 use sakila;
 
--- remove safe move
-SET SQL_SAFE_UPDATES = 0;
-
 -- 1a. Display the first and last names of all actors from the table actor.
 select first_name, last_name from actor;
 
@@ -39,6 +36,9 @@ select last_name, count(*) from actor group by last_name;
 -- but only for names that are shared by at least two actors
 select last_name, count(*) from actor group by last_name having count(*) > 1;
 
+-- remove safe move
+SET SQL_SAFE_UPDATES = 0;
+
 -- 4c. The actor HARPO WILLIAMS was accidentally entered in the actor table as GROUCHO WILLIAMS. Write a query to fix the record.
 update actor set first_name = 'HARPO' where last_name = 'WILLIAMS' and first_name = 'GROUCHO';
 
@@ -68,7 +68,7 @@ CREATE TABLE `address` (
 select staff.first_name, staff.last_name, address.address  from staff, address where staff.address_id = address.address_id;
 
 -- 6b. Use JOIN to display the total amount rung up by each staff member in August of 2005. Use tables staff and payment.
-select staff.staff_id, staff.first_name, staff.last_name, sum(payment.amount) as 'Total Amount' from payment, staff where staff.staff_id = payment.staff_id group by staff.staff_id, staff.first_name, staff.last_name;
+select staff.staff_id, staff.first_name, staff.last_name, sum(payment.amount) as 'Total Amount' from payment, staff where staff.staff_id = payment.staff_id and payment_date >= '01-aug-2015' and payment_date <= '31-aug-2015' group by staff.staff_id, staff.first_name, staff.last_name;
 
 -- 6c. List each film and the number of actors who are listed for that film. Use tables film_actor and film. Use inner join.
 select film.film_id, film.title, count(film_actor.film_id) as 'Number of actors' from film, film_actor where film.film_id = film_actor.film_id group by film.film_id, film.title;
